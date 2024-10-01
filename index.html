@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Países Europeus Aleatórios</title>
+    <style>
+        table {
+            width: 50%;
+            border-collapse: collapse;
+            margin: 0 auto;
+        }
+        th, td {
+            border: 1px solid #000;
+            padding: 10px;
+            text-align: center;
+        }
+        h1 {
+            text-align: center;
+        }
+        input[type="checkbox"] {
+            transform: scale(1.5);
+        }
+    </style>
+</head>
+<body>
+    <h1>Países Europeus Aleatórios</h1>
+    <table id="countryTable">
+        <!-- Tabela será preenchida via JavaScript -->
+    </table>
+
+    <script>
+        // Lista de 50 países europeus
+        const europeanCountries = ["Albânia", "Alemanha", "Andorra", "Armênia", "Áustria", "Azerbaijão", "Bélgica", "Bósnia e Herzegovina", "Bulgária", "Chipre", "Croácia", "Dinamarca", "Eslováquia", "Eslovênia", "Espanha", "Estônia", "Finlândia", "França", "Geórgia", "Grécia", "Hungria", "Islândia", "Irlanda", "Itália", "Cazaquistão", "Kosovo", "Letônia", "Liechtenstein", "Lituânia", "Luxemburgo", "Macedônia do Norte", "Malta", "Moldávia", "Mônaco", "Montenegro", "Noruega", "Países Baixos", "Polônia", "Portugal", "Reino Unido", "República Tcheca", "Romênia", "Rússia", "San Marino", "Sérvia", "Suécia", "Suíça", "Turquia", "Ucrânia", "Vaticano"];
+
+        // Função para embaralhar os países
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // Função para selecionar 25 países aleatórios
+        function selectRandomCountries(countries, count) {
+            const shuffled = shuffle([...countries]);
+            return shuffled.slice(0, count);
+        }
+
+        // Função para criar a tabela 5x5
+        function generateTable() {
+            const selectedCountries = selectRandomCountries(europeanCountries, 25);
+            const table = document.getElementById("countryTable");
+
+            for (let i = 0; i < 5; i++) {
+                const row = document.createElement("tr");
+
+                for (let j = 0; j < 5; j++) {
+                    const country = selectedCountries[i * 5 + j];
+
+                    const cellCountry = document.createElement("td");
+                    cellCountry.textContent = country;
+
+                    const cellCheckbox = document.createElement("td");
+                    const checkbox = document.createElement("input");
+                    checkbox.type = "checkbox";
+                    cellCheckbox.appendChild(checkbox);
+
+                    row.appendChild(cellCountry);
+                    row.appendChild(cellCheckbox);
+                }
+
+                table.appendChild(row);
+            }
+        }
+
+        // Gera a tabela quando a página é carregada
+        window.onload = generateTable;
+    </script>
+</body>
+</html>
