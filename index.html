@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Países Europeus Aleatórios</title>
+    <title>Países Europeus Aleatórios - Bingo</title>
     <style>
         table {
             width: 50%;
@@ -17,6 +17,13 @@
         }
         h1 {
             text-align: center;
+            margin-top: 20px;
+        }
+        #bingoMessage {
+            text-align: center;
+            font-size: 48px;
+            color: green;
+            margin-top: 20px;
         }
         input[type="checkbox"] {
             transform: scale(1.5);
@@ -24,16 +31,24 @@
     </style>
 </head>
 <body>
-    <h1>Países Europeus Aleatórios</h1>
+    <h1>Países Europeus Aleatórios - Bingo</h1>
     <table id="countryTable">
         <!-- Tabela será preenchida via JavaScript -->
     </table>
+    <div id="bingoMessage"></div>
 
     <script>
-        // Lista de 50 países europeus
-        const europeanCountries = ["Albânia", "Alemanha", "Andorra", "Armênia", "Áustria", "Azerbaijão", "Bélgica", "Bósnia e Herzegovina", "Bulgária", "Chipre", "Croácia", "Dinamarca", "Eslováquia", "Eslovênia", "Espanha", "Estônia", "Finlândia", "França", "Geórgia", "Grécia", "Hungria", "Islândia", "Irlanda", "Itália", "Cazaquistão", "Kosovo", "Letônia", "Liechtenstein", "Lituânia", "Luxemburgo", "Macedônia do Norte", "Malta", "Moldávia", "Mônaco", "Montenegro", "Noruega", "Países Baixos", "Polônia", "Portugal", "Reino Unido", "República Tcheca", "Romênia", "Rússia", "San Marino", "Sérvia", "Suécia", "Suíça", "Turquia", "Ucrânia", "Vaticano"];
+        const europeanCountries = [
+            "Albânia", "Alemanha", "Andorra", "Armênia", "Áustria", "Azerbaijão", "Bélgica",
+            "Bósnia e Herzegovina", "Bulgária", "Chipre", "Croácia", "Dinamarca", "Eslováquia", 
+            "Eslovênia", "Espanha", "Estônia", "Finlândia", "França", "Geórgia", "Grécia", 
+            "Hungria", "Islândia", "Irlanda", "Itália", "Cazaquistão", "Kosovo", "Letônia", 
+            "Liechtenstein", "Lituânia", "Luxemburgo", "Macedônia do Norte", "Malta", "Moldávia", 
+            "Mônaco", "Montenegro", "Noruega", "Países Baixos", "Polônia", "Portugal", 
+            "Reino Unido", "República Tcheca", "Romênia", "Rússia", "San Marino", "Sérvia", 
+            "Suécia", "Suíça", "Turquia", "Ucrânia", "Vaticano"
+        ];
 
-        // Função para embaralhar os países
         function shuffle(array) {
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -42,13 +57,11 @@
             return array;
         }
 
-        // Função para selecionar 25 países aleatórios
         function selectRandomCountries(countries, count) {
             const shuffled = shuffle([...countries]);
             return shuffled.slice(0, count);
         }
 
-        // Função para criar a tabela 5x5
         function generateTable() {
             const selectedCountries = selectRandomCountries(europeanCountries, 25);
             const table = document.getElementById("countryTable");
@@ -65,6 +78,8 @@
                     const cellCheckbox = document.createElement("td");
                     const checkbox = document.createElement("input");
                     checkbox.type = "checkbox";
+                    checkbox.id = checkbox-${i}-${j};
+                    checkbox.addEventListener('change', checkBingo); // Verifica se há "Bingo"
                     cellCheckbox.appendChild(checkbox);
 
                     row.appendChild(cellCountry);
@@ -75,7 +90,57 @@
             }
         }
 
-        // Gera a tabela quando a página é carregada
+        function checkBingo() {
+            const size = 5;
+            let bingo = false;
+
+            // Verifica linhas
+            for (let i = 0; i < size; i++) {
+                if (checkLine(i, 0, 0, 1)) {
+                    bingo = true;
+                }
+            }
+
+            // Verifica colunas
+            for (let j = 0; j < size; j++) {
+                if (checkLine(0, j, 1, 0)) {
+                    bingo = true;
+                }
+            }
+
+            // Verifica diagonal principal
+            if (checkLine(0, 0, 1, 1)) {
+                bingo = true;
+            }
+
+            // Verifica diagonal secundária
+            if (checkLine(0, size - 1, 1, -1)) {
+                bingo = true;
+            }
+
+            // Se houver Bingo, limpa a tabela e exibe a mensagem grande de "BINGO!"
+            if (bingo) {
+                clearTable();
+                const message = document.getElementById("bingoMessage");
+                message.textContent = "BINGO!";
+            }
+        }
+
+        function checkLine(startRow, startCol, rowStep, colStep) {
+            for (let i = 0; i < 5; i++) {
+                const checkbox = document.getElementById(checkbox-${startRow + i * rowStep}-${startCol + i * colStep});
+                if (!checkbox.checked) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        function clearTable() {
+            const table = document.getElementById("countryTable");
+            table.innerHTML = ""; // Remove todo o conteúdo da tabela
+        }
+
         window.onload = generateTable;
     </script>
 </body>
